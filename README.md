@@ -1,6 +1,6 @@
 # Nursery Inventory Query Tool
 
-A simple, flexible tool for querying nursery inventory from CSV files.
+A simple, flexible tool for querying nursery inventory from CSV files. Includes both a user-friendly web interface and a command-line tool.
 
 ## Getting Started
 
@@ -16,6 +16,29 @@ A simple, flexible tool for querying nursery inventory from CSV files.
 ```bash
 pip install -r requirements.txt
 ```
+
+## Web Interface (Recommended)
+
+The easiest way to search your inventory is using the web interface:
+
+```bash
+streamlit run app.py
+```
+
+This will open a web browser with a user-friendly interface where you can:
+- 🔍 Search by plant name (botanical or common)
+- 🏷️ Filter by category
+- 📊 Filter by stock levels (in stock, high stock, low stock)
+- 📥 Download filtered results as CSV
+- 📈 View summary statistics
+
+Simply type a plant name in the search box and instantly see:
+- Inventory quantities (OnHand)
+- Available sizes (ProductSKU)
+- Pricing (Price and VolumePrice)
+- Categories and common names
+
+## Command Line Tool
 
 ### Usage
 
