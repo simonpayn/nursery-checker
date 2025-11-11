@@ -14,7 +14,20 @@ class InventoryQuery:
     def __init__(self, csv_path):
         """Initialize with a CSV file path."""
         try:
-            self.df = pd.read_csv(csv_path)
+            # Try different encodings
+            encodings = ['utf-8', 'latin-1', 'iso-8859-1', 'cp1252']
+            self.df = None
+
+            for encoding in encodings:
+                try:
+                    self.df = pd.read_csv(csv_path, encoding=encoding)
+                    break
+                except (UnicodeDecodeError, UnicodeError):
+                    continue
+
+            if self.df is None:
+                raise Exception("Could not decode file with any supported encoding")
+
             self.csv_path = csv_path
             print(f"Loaded {len(self.df)} records from {csv_path}")
             print(f"Columns: {', '.join(self.df.columns)}\n")
