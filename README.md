@@ -19,6 +19,8 @@ pip install -r requirements.txt
 
 ## Web Interface (Recommended)
 
+### Running Locally
+
 The easiest way to search your inventory is using the web interface:
 
 ```bash
@@ -37,6 +39,36 @@ Simply type a plant name in the search box and instantly see:
 - Available sizes (ProductSKU)
 - Pricing (Price and VolumePrice)
 - Categories and common names
+
+### Deploy to the Web (Free!)
+
+You can make this app accessible via a simple URL using Streamlit Community Cloud (free for public repositories):
+
+#### Option 1: Deploy from GitHub (Recommended)
+
+1. **Merge your code to the main branch** (or use any branch you prefer)
+2. **Go to [share.streamlit.io](https://share.streamlit.io)**
+3. **Sign in with your GitHub account**
+4. **Click "New app"**
+5. **Fill in the deployment settings:**
+   - Repository: `simonpayn/nursery-checker`
+   - Branch: `main` (or your preferred branch)
+   - Main file path: `app.py`
+6. **Click "Deploy"**
+
+Your app will be available at a URL like: `https://your-app-name.streamlit.app`
+
+#### Option 2: Deploy from Fork
+
+If the repository is private or you want your own copy:
+1. Fork the repository to your GitHub account
+2. Follow the same steps above using your forked repository
+
+#### Important Notes:
+- The deployment is **completely free** for public repositories
+- Your app will automatically update when you push changes to GitHub
+- Make sure your CSV file (`NVK_October_28.csv`) is included in the repository
+- The app will be accessible to anyone with the URL
 
 ## Command Line Tool
 
