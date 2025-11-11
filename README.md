@@ -2,7 +2,30 @@
 
 A simple, flexible tool for querying nursery inventory from CSV files. Includes both a user-friendly web interface and a command-line tool.
 
-## Getting Started
+## 🌐 Access the App Online
+
+**The easiest way to use this tool is via the web!** No installation needed - just visit the URL and upload your CSV file.
+
+### Deploy Your Own (Free!)
+
+You can deploy your own version of this app for free on Streamlit Community Cloud:
+
+1. **Fork or push this repository to GitHub**
+
+2. **Go to [share.streamlit.io](https://share.streamlit.io)**
+
+3. **Sign in with GitHub**
+
+4. **Click "New app"** and select:
+   - Repository: `your-username/nursery-checker`
+   - Branch: `main` (or your branch name)
+   - Main file path: `app.py`
+
+5. **Click "Deploy"** - Your app will be live at a public URL in minutes!
+
+6. **Share the URL** with anyone who needs to search your inventory
+
+## 💻 Run Locally
 
 ### Prerequisites
 
@@ -17,26 +40,24 @@ A simple, flexible tool for querying nursery inventory from CSV files. Includes 
 pip install -r requirements.txt
 ```
 
-## Web Interface (Recommended)
+### Web Interface (Recommended)
 
-The easiest way to search your inventory is using the web interface:
+Run the web interface locally:
 
 ```bash
 streamlit run app.py
 ```
 
 This will open a web browser with a user-friendly interface where you can:
-- 🔍 Search by plant name (botanical or common)
-- 🏷️ Filter by category
-- 📊 Filter by stock levels (in stock, high stock, low stock)
+- 📂 Upload any CSV inventory file
+- 🔍 Search across all columns
+- 🏷️ Filter by category (auto-detected)
+- 📊 Filter by stock levels (auto-detected)
+- 📈 View summary statistics with visual indicators
 - 📥 Download filtered results as CSV
-- 📈 View summary statistics
+- 🎨 Enjoy color-coded stock status indicators
 
-Simply type a plant name in the search box and instantly see:
-- Inventory quantities (OnHand)
-- Available sizes (ProductSKU)
-- Pricing (Price and VolumePrice)
-- Categories and common names
+The app automatically adapts to your CSV structure - no configuration needed!
 
 ## Command Line Tool
 
