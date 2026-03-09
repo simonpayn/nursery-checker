@@ -16,31 +16,77 @@ st.set_page_config(
 )
 
 @st.cache_data
-def load_inventory(csv_path):
-    """Load inventory with automatic encoding detection."""
-    encodings = ['utf-8', 'latin-1', 'iso-8859-1', 'cp1252']
+def load_inventory(file_path):
+    """Load inventory from an Excel file with multiple sheets.
 
-    for encoding in encodings:
-        try:
-            df = pd.read_csv(csv_path, encoding=encoding)
-            return df
-        except (UnicodeDecodeError, UnicodeError):
-            continue
+    Each sheet represents a category. Row 0 of each sheet contains
+    the column headers (Botanical, Common name, Size, Quantity, Price,
+    25 plus price, Order). The sheet name becomes the Category column.
+    """
+    try:
+        xls = pd.ExcelFile(file_path)
+    except Exception as e:
+        st.error(f"Could not open file: {e}")
+        return None
 
-    return None
+    column_map = {
+        0: 'Botanical name',
+        1: 'CommonNames',
+        2: 'ProductSKU',
+        3: 'OnHand',
+        4: 'Price',
+        5: 'VolumePrice',
+        6: 'Order',
+    }
+
+    frames = []
+    for sheet in xls.sheet_names:
+        raw = pd.read_excel(xls, sheet_name=sheet, header=None)
+
+        # Find the header row (contains "Botanical") and skip it
+        header_idx = None
+        for i in range(min(5, len(raw))):
+            if raw.iloc[i].astype(str).str.contains('Botanical', case=False, na=False).any():
+                header_idx = i
+                break
+
+        if header_idx is not None:
+            data = raw.iloc[header_idx + 1:].reset_index(drop=True)
+        else:
+            data = raw.copy()
+
+        # Rename columns by position
+        data.columns = range(len(data.columns))
+        data = data.rename(columns=column_map)
+
+        # Add category from sheet name
+        data['Category'] = sheet
+
+        # Convert numeric columns
+        data['OnHand'] = pd.to_numeric(data['OnHand'], errors='coerce').fillna(0).astype(int)
+        data['Price'] = pd.to_numeric(data['Price'], errors='coerce')
+        data['VolumePrice'] = pd.to_numeric(data['VolumePrice'], errors='coerce')
+
+        frames.append(data)
+
+    if not frames:
+        return None
+
+    df = pd.concat(frames, ignore_index=True)
+    return df
 
 def main():
     st.title("🌿 Nursery Inventory Search")
     st.markdown("---")
 
     # Load inventory
-    csv_file = "NVK_October_28.csv"
+    inventory_file = "NVK+availability.xls"
 
     try:
-        df = load_inventory(csv_file)
+        df = load_inventory(inventory_file)
 
         if df is None:
-            st.error("Could not load inventory file. Please check the file encoding.")
+            st.error("Could not load inventory file. Please check the file format.")
             return
 
         # Sidebar filters
@@ -119,9 +165,8 @@ def main():
                 'ProductSKU',
                 'Category',
                 'OnHand',
-                ' Price ',
-                'VolumeQuantity',
-                ' VolumePrice '
+                'Price',
+                'VolumePrice',
             ]].copy()
 
             # Style the dataframe
@@ -152,7 +197,7 @@ def main():
         st.sidebar.write(f"In Stock Items: {len(df[df['OnHand'] > 0]):,}")
 
     except FileNotFoundError:
-        st.error(f"❌ File '{csv_file}' not found. Please make sure the inventory file is in the same directory as this app.")
+        st.error(f"❌ File '{inventory_file}' not found. Please make sure the inventory file is in the same directory as this app.")
     except Exception as e:
         st.error(f"❌ Error loading inventory: {e}")
 
