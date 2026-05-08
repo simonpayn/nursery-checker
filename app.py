@@ -59,11 +59,13 @@ def parse_nvk_xls(raw):
 def load_inventory(file_path):
     """Load inventory from CSV or XLS/XLSX."""
     if file_path.endswith(".xls"):
-        raw = pd.read_excel(file_path, engine="xlrd", header=None)
-        return parse_nvk_xls(raw)
+        sheets = pd.read_excel(file_path, engine="xlrd", header=None, sheet_name=None)
+        frames = [parse_nvk_xls(sheet) for sheet in sheets.values()]
+        return pd.concat(frames, ignore_index=True)
     elif file_path.endswith((".xlsx", ".xlsm")):
-        raw = pd.read_excel(file_path, engine="openpyxl", header=None)
-        return parse_nvk_xls(raw)
+        sheets = pd.read_excel(file_path, engine="openpyxl", header=None, sheet_name=None)
+        frames = [parse_nvk_xls(sheet) for sheet in sheets.values()]
+        return pd.concat(frames, ignore_index=True)
 
     encodings = ["utf-8", "latin-1", "iso-8859-1", "cp1252"]
     for encoding in encodings:
